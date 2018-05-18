@@ -14,11 +14,12 @@ train_images, train_labels, test_images, test_labels = get_mnist.mnist('data/')
 # img = images[0]
 # index = random.randrange(0, len(test_images))  # choose an index ;-)
 # print(mndata.display(test_images[index]))
-img = test_images[0]
-print(type(img))
+img = test_images[0].reshape(28,28)
+print(img.shape)
 # img =np.array(img)
 
-cv2.imshow('img', img)
+# cv2.imshow('img', img.reshape(28,28))
+# cv2.waitKey(0)
 import tensorflow as tf 
 sess = tf.Session()
 saver = tf.train.import_meta_graph('my-model.meta')
