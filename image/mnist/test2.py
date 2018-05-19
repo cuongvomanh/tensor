@@ -73,34 +73,35 @@ hidden = tf.nn.relu(tf.matmul(reshape, fc1_weights) + fc1_biases)
 logits = tf.matmul(hidden, fc2_weights) + fc2_biases
 
 # sess = tf.InteractiveSession()
-
 saver = tf.train.Saver()
 
-img = test_images[1].reshape(28,28)
-cv2.imshow('img', img)
-cv2.waitKey(0)
+path = '/home/cuong/VNG/ViettelCardReader_V5/images/'
+imgs = test_images
+imgs_str = 'test_images'
+output_dir = imgs_str + '_output'
+import os
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
 with tf.Session() as sess:
     saver.restore(sess, 'my-model')
-    sess.run(tf.global_variables_initializer())
-    
-    img_reshape = np.reshape(img, (1, 28, 28, 1))
-    pred = sess.run(logits, feed_dict = {data: img_reshape})
-    print(pred)
-    print(np.argmax(pred))
-# path = '/home/cuong/VNG/ViettelCardReader_V5/images/'
-# output_dir = './new_output'
-# if not os.path.exists(output_dir):
-#     os.makedirs(output_dir)
-# img_dir = 'anh da dang'
-# for i in range(len(test_images)):
-#     img = test_images[i].reshape(28,28)
-    
-#     print("file "+fn)
-#     name_img = fn[fn.rfind('/')+1: fn.rfind('.')]
-#     img = cv2.imread(fn)
-#     list_card = card_detection.get_card_images(img)
-#     print(len(list_card))
-#     for i, card in enumerate(list_card):
-#         cv2.imwrite(os.path.join(output_dir, img_dir + '_' +name_img + '_' + str(i)+'.jpg'), card)
+    for i in range(len(imgs)):
+        img = imgs[i].reshape(28,28)
+
+        # print(img)
+        # cv2.imshow('img', img)
+        # cv2.waitKey(0)
+        
+        sess.run(tf.global_variables_initializer())
+        
+        img_reshape = np.reshape(img, (1, 28, 28, 1))
+        pred = sess.run(logits, feed_dict = {data: img_reshape})
+        pred_number = np.argmax(pred)
+        # print(pred_number)
+        # print("i = ", i)
+
+        name_img = 'image_' + str(i) + 'is_' + str(pred_number) +'.jpg'
+        # changed_img = 
+        cv2.imwrite(os.path.join(output_dir, imgs_str + '_' +str(i) + '_is_' + str(pred_number)+'.png'), 255*img)
 
 
