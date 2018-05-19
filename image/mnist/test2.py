@@ -77,31 +77,46 @@ saver = tf.train.Saver()
 
 path = '/home/cuong/VNG/ViettelCardReader_V5/images/'
 imgs = test_images
+labels = test_labels
 imgs_str = 'test_images'
 output_dir = imgs_str + '_output'
+true_dir = './'+ output_dir + '/true_dir'
+false_dir = './'+ output_dir + '/false_dir'
 import os
-if not os.path.exists(output_dir):
-    os.makedirs(output_dir)
+def maybe_mkdir(dir):
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+maybe_mkdir(output_dir)
+maybe_mkdir(true_dir)
+maybe_mkdir(false_dir)
+
+
+
 
 with tf.Session() as sess:
     saver.restore(sess, 'my-model')
     for i in range(len(imgs)):
         img = imgs[i].reshape(28,28)
-
+        label_number = np.argmax(labels[i])
         # print(img)
         # cv2.imshow('img', img)
         # cv2.waitKey(0)
         
-        sess.run(tf.global_variables_initializer())
+        # sess.run(tf.global_variables_initializer())
         
         img_reshape = np.reshape(img, (1, 28, 28, 1))
         pred = sess.run(logits, feed_dict = {data: img_reshape})
         pred_number = np.argmax(pred)
+        (result, write_dir) = (True, true_dir) if label_number == pred_number else (False, false_dir)
         # print(pred_number)
         # print("i = ", i)
 
         name_img = 'image_' + str(i) + 'is_' + str(pred_number) +'.jpg'
         # changed_img = 
-        cv2.imwrite(os.path.join(output_dir, imgs_str + '_' +str(i) + '_is_' + str(pred_number)+'.png'), 255*img)
+        file_name = str(i) + '_is_' + str(pred_number)
+        if label_number != pred_number:
+            file_name += '>label_' + str(label_number)
+        file_name += '_' +str(result) +'.png'
+        cv2.imwrite(os.path.join(write_dir, file_name), 255*img)
 
 

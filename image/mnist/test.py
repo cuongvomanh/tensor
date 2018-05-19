@@ -73,15 +73,17 @@ hidden = tf.nn.relu(tf.matmul(reshape, fc1_weights) + fc1_biases)
 logits = tf.matmul(hidden, fc2_weights) + fc2_biases
 
 # sess = tf.InteractiveSession()
-
-saver = tf.train.Saver()
-
-img = test_images[1].reshape(28,28)
+labels = test_labels
+label = np.argmax(labels[0])
+print(label)
+img = test_images[0].reshape(28,28)
 # cv2.imshow('img', img)
 # cv2.waitKey(0)
+saver = tf.train.Saver()
+
 with tf.Session() as sess:
     saver.restore(sess, 'my-model')
-    sess.run(tf.global_variables_initializer())
+    # sess.run(tf.global_variables_initializer())
     
     img_reshape = np.reshape(img, (1, 28, 28, 1))
     pred = sess.run(logits, feed_dict = {data: img_reshape})
