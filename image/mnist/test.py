@@ -77,8 +77,8 @@ logits = tf.matmul(hidden, fc2_weights) + fc2_biases
 saver = tf.train.Saver()
 
 img = test_images[1].reshape(28,28)
-cv2.imshow('img', img)
-cv2.waitKey(0)
+# cv2.imshow('img', img)
+# cv2.waitKey(0)
 with tf.Session() as sess:
     saver.restore(sess, 'my-model')
     sess.run(tf.global_variables_initializer())
