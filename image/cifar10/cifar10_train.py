@@ -45,12 +45,9 @@ import cifar10
 
 FLAGS = tf.app.flags.FLAGS
 
-# tf.app.flags.DEFINE_string('train_dir', '/tmp/cifar10_train',
-#                            """Directory where to write event logs """
-#                            """and checkpoint.""")
-tf.app.flags.DEFINE_string('train_dir', '/home/DATA/cuongvm3/Data/cifar10_train/',
+tf.app.flags.DEFINE_string('train_dir', '/tmp/cifar10_train',
                            """Directory where to write event logs """
-                           """and checkpoint.""")                           
+                           """and checkpoint.""")
 tf.app.flags.DEFINE_integer('max_steps', 1000000,
                             """Number of batches to run.""")
 tf.app.flags.DEFINE_boolean('log_device_placement', False,
@@ -69,11 +66,9 @@ def train():
     # GPU and resulting in a slow down.
     with tf.device('/cpu:0'):
       images, labels = cifar10.distorted_inputs()
-    # images, labels = cifar10.distorted_inputs()
 
     # Build a Graph that computes the logits predictions from the
     # inference model.
-    
     logits = cifar10.inference(images)
 
     # Calculate loss.
