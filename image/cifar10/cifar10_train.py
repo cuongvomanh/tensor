@@ -104,6 +104,12 @@ def train():
           print (format_str % (datetime.now(), self._step, loss_value,
                                examples_per_sec, sec_per_batch))
     saver = tf.train.Saver()
+    def get_session(sess):
+      session = sess
+      while type(session).__name__ != 'Session':
+          #pylint: disable=W0212
+          session = session._sess
+      return session
     with tf.train.MonitoredTrainingSession(
         checkpoint_dir=FLAGS.train_dir,
         hooks=[tf.train.StopAtStepHook(last_step=FLAGS.max_steps),
@@ -113,7 +119,7 @@ def train():
             log_device_placement=FLAGS.log_device_placement)) as mon_sess:
       while not mon_sess.should_stop():
         mon_sess.run(train_op)
-      saver.save(mon_sess, './my-model')
+      saver.save(get_session(mon_sess), './my-model')
 
 
 
