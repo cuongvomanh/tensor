@@ -64,7 +64,7 @@ def train():
     # Get images and labels for CIFAR-10.
     # Force input pipeline to CPU:0 to avoid operations sometimes ending up on
     # GPU and resulting in a slow down.
-    with tf.device('/cpu:0'):
+    with tf.device('/gpu:0'):
       images, labels = cifar10.distorted_inputs()
 
     # Build a Graph that computes the logits predictions from the
@@ -103,7 +103,7 @@ def train():
                         'sec/batch)')
           print (format_str % (datetime.now(), self._step, loss_value,
                                examples_per_sec, sec_per_batch))
-
+    saver = tf.train.Saver()
     with tf.train.MonitoredTrainingSession(
         checkpoint_dir=FLAGS.train_dir,
         hooks=[tf.train.StopAtStepHook(last_step=FLAGS.max_steps),
@@ -113,6 +113,8 @@ def train():
             log_device_placement=FLAGS.log_device_placement)) as mon_sess:
       while not mon_sess.should_stop():
         mon_sess.run(train_op)
+      saver.save(mon_sess, './my-model')
+
 
 
 def main(argv=None):  # pylint: disable=unused-argument
